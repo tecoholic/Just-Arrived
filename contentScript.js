@@ -1,4 +1,5 @@
 let seenTweets = [];
+let unSeenTweets = [];
 
 // Date to timestamp - thanks Stack overflow
 Date.prototype.yyyymmdd = function () {
@@ -26,7 +27,6 @@ function listTweetIds() {
   let tweets = document.querySelectorAll("article");
   let reg = new RegExp(/\/*\/status\/(?<tweetId>[0-9]+)/);
 
-  let tweetIds = [];
   tweets.forEach(function (tweet) {
     let links = tweet.querySelectorAll("a");
     for (let i = 0; i < links.length; i++) {
@@ -37,15 +37,15 @@ function listTweetIds() {
       }
       if (seenTweets.indexOf(matches.groups.tweetId) !== -1) {
         tweet.setAttribute("style", "opacity: 50%;");
-      } else {
-        tweetIds.push(matches.groups.tweetId);
+      } else if (unSeenTweets.indexOf(matches.groups.tweetId) === -1) {
+        unSeenTweets.push(matches.groups.tweetId);
       }
       return;
     }
   });
 
   let store = {};
-  store[today] = JSON.stringify(seenTweets.concat(tweetIds));
+  store[today] = JSON.stringify(seenTweets.concat(unSeenTweets));
   chrome.storage.local.set(store);
 }
 
