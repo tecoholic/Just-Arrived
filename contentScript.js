@@ -49,4 +49,27 @@ function listTweetIds() {
   chrome.storage.local.set(store);
 }
 
+/**
+ * Show a small indicator to denote that Just Arrived is loaded into the page
+ */
+
+function showIndicator() {
+  const container = document.createElement("div")
+  container.setAttribute("id", "just-arrived-notifier")
+  container.setAttribute("style", "position: fixed; top: 10px; right: 10px; padding: 0.5rem; border: 1px solid #29B6F6; background-color: #E1F5FE; z-index: 100; font-size: xx-small;")
+  const text = document.createTextNode("Just Arrived")
+  container.appendChild(text);
+  let body = document.querySelector("body");
+  body.appendChild(container);
+  setTimeout(removeIndicator, 15000);
+}
+
+function removeIndicator() {
+  let body = document.querySelector("body");
+  body.querySelector("#just-arrived-notifier").remove();
+}
+
+
 let timer = setInterval(listTweetIds, 2000);
+showIndicator();
+
